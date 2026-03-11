@@ -36,12 +36,19 @@ $fallbacks: m3-bottom-sheet.get-tokens();
   @include elevation.elevation(16);
   padding: $container-vertical-padding
            $container-horizontal-padding;
-  min-width: 100vw;
+  // M3 spec: Full width on mobile, centered with max-width on larger screens
+  width: 100vw;
+  max-width: token-utils.slot(bottom-sheet-container-max-width, $fallbacks);
   box-sizing: border-box;
   display: block;
   outline: 0;
-  max-height: 80vh;
+  // M3 spec: Responsive max-height based on screen size
+  // Compact (mobile): 72px top margin, Expanded (desktop >640px): 56px top margin
+  max-height: token-utils.slot(bottom-sheet-container-max-height-compact, $fallbacks);
   overflow: auto;
+  // M3 spec: Always apply border radius (not just on larger screens)
+  border-top-left-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
+  border-top-right-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
 
   // We don't use this, but it's useful for consumers to position
   // elements (e.g. close buttons) inside the bottom sheet.
@@ -54,6 +61,11 @@ $fallbacks: m3-bottom-sheet.get-tokens();
   line-height: token-utils.slot(bottom-sheet-container-text-line-height, $fallbacks);
   font-weight: token-utils.slot(bottom-sheet-container-text-weight, $fallbacks);
   letter-spacing: token-utils.slot(bottom-sheet-container-text-tracking, $fallbacks);
+
+  // M3 spec: Smaller top margin (56dp) on larger screens (window width > 640dp)
+  @media (min-width: 640px) {
+    max-height: token-utils.slot(bottom-sheet-container-max-height-expanded, $fallbacks);
+  }
 
   @include cdk.high-contrast {
     outline: 1px solid;
@@ -70,28 +82,4 @@ $fallbacks: m3-bottom-sheet.get-tokens();
   &.mat-bottom-sheet-container-exit {
     animation: _mat-bottom-sheet-exit 375ms cubic-bezier(0.4, 0, 1, 1) backwards;
   }
-}
-
-// Applies a border radius to the bottom sheet. Should only be applied when it's not full-screen.
-%_mat-bottom-sheet-container-border-radius {
-  border-top-left-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
-  border-top-right-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
-}
-
-.mat-bottom-sheet-container-medium {
-  @extend %_mat-bottom-sheet-container-border-radius;
-  min-width: $_width-increment * 6;
-  max-width: calc(100vw - #{$_width-increment * 2});
-}
-
-.mat-bottom-sheet-container-large {
-  @extend %_mat-bottom-sheet-container-border-radius;
-  min-width: $_width-increment * 8;
-  max-width: calc(100vw - #{$_width-increment * 4});
-}
-
-.mat-bottom-sheet-container-xlarge {
-  @extend %_mat-bottom-sheet-container-border-radius;
-  min-width: $_width-increment * 9;
-  max-width: calc(100vw - #{$_width-increment * 6});
 }

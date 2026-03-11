@@ -7,16 +7,13 @@
  */
 
 import {CdkDialogContainer} from '@angular/cdk/dialog';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   OnDestroy,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {_animationsDisabled} from '../core';
 
@@ -53,7 +50,6 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
   imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
-  private _breakpointSubscription: Subscription;
   protected _animationsDisabled = _animationsDisabled();
 
   /** The state of the bottom sheet animations. */
@@ -72,27 +68,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
 
   constructor() {
     super();
-
-    const breakpointObserver = inject(BreakpointObserver);
-
-    this._breakpointSubscription = breakpointObserver
-      .observe([Breakpoints.Medium, Breakpoints.Large, Breakpoints.XLarge])
-      .subscribe(() => {
-        const classList = (this._elementRef.nativeElement as HTMLElement).classList;
-
-        classList.toggle(
-          'mat-bottom-sheet-container-medium',
-          breakpointObserver.isMatched(Breakpoints.Medium),
-        );
-        classList.toggle(
-          'mat-bottom-sheet-container-large',
-          breakpointObserver.isMatched(Breakpoints.Large),
-        );
-        classList.toggle(
-          'mat-bottom-sheet-container-xlarge',
-          breakpointObserver.isMatched(Breakpoints.XLarge),
-        );
-      });
   }
 
   /** Begin animation of bottom sheet entrance into view. */
@@ -121,7 +96,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-    this._breakpointSubscription.unsubscribe();
     this._destroyed = true;
   }
 

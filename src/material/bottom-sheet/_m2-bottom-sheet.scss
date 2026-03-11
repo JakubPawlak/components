@@ -7,6 +7,9 @@
   @return (
     base: (
       bottom-sheet-container-shape: 4px,
+      bottom-sheet-container-max-width: 100vw,
+      bottom-sheet-container-max-height-compact: 80vh,
+      bottom-sheet-container-max-height-expanded: 80vh,
     ),
     color: (
       bottom-sheet-container-text-color: map.get($system, on-surface),
